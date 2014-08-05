@@ -8,12 +8,11 @@ public final class SocialSecurityNumber {
 		this.value = value;
 	}
 	
-	@MaskFormat("###-##-####")
 	public String getValue() {
 		return value;
 	}
 
-	public static SocialSecurityNumber valueOf(@MaskFormat("###-##-####") String value) {
+	public static SocialSecurityNumber valueOf(String value) {
 		return new SocialSecurityNumber(value);
 	}
 	

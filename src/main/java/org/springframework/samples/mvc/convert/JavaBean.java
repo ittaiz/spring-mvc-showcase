@@ -1,11 +1,11 @@
 package org.springframework.samples.mvc.convert;
 
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.format.annotation.DateTimeFormat.ISO;
+
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
-
-import org.springframework.format.annotation.DateTimeFormat;
-import org.springframework.format.annotation.DateTimeFormat.ISO;
 
 public class JavaBean {
 	
@@ -14,7 +14,6 @@ public class JavaBean {
 	@DateTimeFormat(iso=ISO.DATE)
 	private Date date;
 
-	@MaskFormat("(###) ###-####")
 	private String masked;
 
 	// list will auto-grow as its dereferenced e.g. list[0]=value

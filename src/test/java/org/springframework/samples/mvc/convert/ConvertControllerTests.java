@@ -1,20 +1,19 @@
 package org.springframework.samples.mvc.convert;
 
-import static org.hamcrest.Matchers.startsWith;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
+import org.junit.Before;
+import org.junit.Test;
+import org.springframework.format.support.DefaultFormattingConversionService;
+import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.Calendar;
 import java.util.Date;
 import java.util.TimeZone;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.springframework.format.support.DefaultFormattingConversionService;
-import org.springframework.format.support.FormattingConversionService;
-import org.springframework.test.web.servlet.MockMvc;
+import static org.hamcrest.Matchers.startsWith;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 public class ConvertControllerTests {
 	
@@ -22,11 +21,9 @@ public class ConvertControllerTests {
 
 	@Before
 	public void setup() throws Exception {
-		FormattingConversionService cs = new DefaultFormattingConversionService();
-		cs.addFormatterForFieldAnnotation(new MaskFormatAnnotationFormatterFactory());
 
-		this.mockMvc = standaloneSetup(new ConvertController())
-				.setConversionService(cs)
+        this.mockMvc = standaloneSetup(new ConvertController())
+				.setConversionService(new DefaultFormattingConversionService())
 				.alwaysExpect(status().isOk())
 				.build();
 	}
@@ -74,12 +71,6 @@ public class ConvertControllerTests {
 	}
 
 	@Test
-	public void custom() throws Exception {
-		this.mockMvc.perform(get("/convert/custom?value=123-45-6789"))
-				.andExpect(content().string("Converted '123456789' with a custom converter"));
-	}
-
-	@Test
 	public void beanPrimitive() throws Exception {
 		this.mockMvc.perform(get("/convert/bean?primitive=3"))
 				.andExpect(content().string("Converted JavaBean primitive=3"));
@@ -90,12 +81,6 @@ public class ConvertControllerTests {
 		String timezone = getTimezone(2010, 7, 4);
 		this.mockMvc.perform(get("/convert/bean?date=2010-07-04"))
 				.andExpect(content().string("Converted JavaBean date=Sun Jul 04 00:00:00 " + timezone + " 2010"));
-	}
-
-	@Test
-	public void beanMasked() throws Exception {
-		this.mockMvc.perform(get("/convert/bean?masked=(205) 333-3333"))
-				.andExpect(content().string("Converted JavaBean masked=2053333333"));
 	}
 
 	@Test
